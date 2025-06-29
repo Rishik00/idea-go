@@ -15,6 +15,6 @@ func main() {
 		panic(err)
 	}
 	defer db.CloseDB() // closes when app exits
-	
+
 	cmd.Execute()
 }

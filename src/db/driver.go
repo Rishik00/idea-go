@@ -42,15 +42,16 @@ func AddBucket(bucketname string) error {
 	}) 
 }
 
-
-func AddIdea(bucketname, idea, description string) error {
-	return db.Update(func(tx *bolt.Tx) error {
+func AddIdea(bucketname, idea, description string) (string, error) {
+	err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucketname))
 		if b == nil {
 			return fmt.Errorf("bucket %q does not exist", bucketname)
 		}
 		return b.Put([]byte(idea), []byte(description))
 	})
+
+	return "Done, added title and description to DB", err
 }
 
 func deleteIdea(bucket, idea string) error {
@@ -63,8 +64,10 @@ func deleteIdea(bucket, idea string) error {
 	})
 }
 
-func IdeasPerBucket(bucket string) error{
-	return db.View(func(tx *bolt.Tx) error {
+func IdeasPerBucket(bucket string) ([]string, error) {
+	var bucketOfIdeas []string
+
+	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucket))
 		if b == nil {
 			return fmt.Errorf("bucket %q doesnt exist", bucket)
@@ -73,10 +76,13 @@ func IdeasPerBucket(bucket string) error{
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			fmt.Printf("key=%s, value=%s\n", k, v)
+			bucketOfIdeas = append(bucketOfIdeas, string(k))
 		}
 
-		return nil
+		return nil    
 	})	
+
+	return bucketOfIdeas, err
 }
 
 func ShowExistingBuckets() ([]string, error) {

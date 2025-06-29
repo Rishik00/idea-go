@@ -6,6 +6,7 @@ import (
 	// Github imports
 	"github.com/spf13/cobra"
 	"github.com/manifoldco/promptui"
+	survey "github.com/AlecAivazis/survey/v2"
 
 	// Local imports
 	"idea/db"
@@ -31,23 +32,16 @@ func SetupShit() {
 
 func setupBucket() {
 
-	templates := &promptui.PromptTemplates{
-		Prompt:  "{{ . }} ",
-		Valid:   "{{ . | green }} ",
-		Invalid: "{{ . | red }} ",
-		Success: "", // disables re-printing entered value
+	var title string
+	bucketName := &survey.Input{
+		Message: "Enter your bucket name:",
 	}
 
 	// Title input
-	ApiSecretPrompt := promptui.Prompt{
-		Label:     "Enter your bucketname: ",
-		Templates: templates,
-	}
-	result, err := ApiSecretPrompt.Run()
-	checkErr(err)
+	checkErr(survey.AskOne(bucketName, &title))
 
-	db.AddBucket(result)
-	fmt.Print("Added the bucketname to DB:", result)
+	db.AddBucket(title)
+	fmt.Print("Added the bucketname to DB:", title)
 }
 
 var SetupCmd = &cobra.Command{

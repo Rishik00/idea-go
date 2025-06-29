@@ -49,6 +49,7 @@ func createShit() {
 	fmt.Println("Title      :", title)
 	fmt.Println("Description:", description)
 
+	db.AddIdea(bucket, title, description)
 }
 
 var InitCmd = &cobra.Command{
