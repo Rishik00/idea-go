@@ -11,7 +11,6 @@ import (
 	"idea/db"
 )
 
-
 func SetupShit() {
 	templates := &promptui.PromptTemplates{
 		Prompt:  "{{ . }} ",
@@ -31,6 +30,7 @@ func SetupShit() {
 }
 
 func setupBucket() {
+
 	templates := &promptui.PromptTemplates{
 		Prompt:  "{{ . }} ",
 		Valid:   "{{ . | green }} ",

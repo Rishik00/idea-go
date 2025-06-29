@@ -63,7 +63,7 @@ func deleteIdea(bucket, idea string) error {
 	})
 }
 
-func ShowThemAll(bucket string, num int) error{
+func IdeasPerBucket(bucket string) error{
 	return db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucket))
 		if b == nil {
@@ -79,7 +79,22 @@ func ShowThemAll(bucket string, num int) error{
 	})	
 }
 
-func DontJustShowThemAll() error {
+func ShowExistingBuckets() ([]string, error) {
+	var existingBuckets []string
+
+	err := db.View(func(tx *bolt.Tx) error {
+		tx.ForEach(func(name []byte, b *bolt.Bucket) error {
+
+			existingBuckets = append(existingBuckets, string(name))
+			return nil
+		})
+		return nil
+	})
+
+	return existingBuckets, err		
+}
+
+func DontJustShowThemAll(bucket string, num int) error {
 	// TODO: implement a filtered or formatted idea viewer
 	return nil
 }
@@ -88,15 +103,4 @@ func CloseDB() {
 	if db != nil {
 		db.Close()
 	}
-}
-
-
-func PrintExistingBuckets() error {
-	return db.View(func(tx *bolt.Tx) error {
-		tx.ForEach(func(name []byte, b *bolt.Bucket) error {
-			fmt.Println("Bucket: ", string(name))
-			return nil
-		})
-		return nil
-	})
 }

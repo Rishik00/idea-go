@@ -3,40 +3,51 @@ package cmd
 import (
 	"fmt"
 
-	// Github imports
-	"github.com/spf13/cobra"
-	"github.com/manifoldco/promptui"
-)
+	"idea/db"
 
-func checkErr (err error) {
+	// Github imports
+	survey "github.com/AlecAivazis/survey/v2"
+	"github.com/spf13/cobra"
+
+)
+func checkErr(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
 
 func createShit() {
-	templates := &promptui.PromptTemplates{
-		Prompt:  "{{ . }} ",
-		Valid:   "{{ . | green }} ",
-		Invalid: "{{ . | red }} ",
-		Success: "", // disables re-printing entered value
-	}
-
-	// Title input
-	Ideaprompt := promptui.Prompt{
-		Label:     "Enter your idea title",
-		Templates: templates,
-	}
-	_, err := Ideaprompt.Run()
+	keys, err := db.ShowExistingBuckets()
 	checkErr(err)
 
-	// Description input
-	DescPrompt := promptui.Prompt{
-		Label:     "Description for your idea son",
-		Templates: templates,
+	if len(keys) == 0 {
+		fmt.Println("No buckets found.")
+		return
 	}
-	_, descerr := DescPrompt.Run()
-	checkErr(descerr)
+
+	var bucket string
+	bucketPrompt := &survey.Select{
+		Message: "Choose a bucket:",
+		Options: keys,
+	}
+	checkErr(survey.AskOne(bucketPrompt, &bucket))
+
+	var title string
+	titlePrompt := &survey.Input{
+		Message: "Enter your idea title:",
+	}
+	checkErr(survey.AskOne(titlePrompt, &title))
+
+	var description string
+	descPrompt := &survey.Input{
+		Message: "Enter description for your idea:",
+	}
+	checkErr(survey.AskOne(descPrompt, &description))
+
+	fmt.Println("\nYour Idea:")
+	fmt.Println("Bucket     :", bucket)
+	fmt.Println("Title      :", title)
+	fmt.Println("Description:", description)
 
 }
 
@@ -53,5 +64,3 @@ var InitCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(InitCmd)
 }
-
-
