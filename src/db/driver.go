@@ -4,10 +4,15 @@ import (
 	"errors"
 	"fmt"
 
-	bolt "go.etcd.io/bbolt" 
+	bolt "go.etcd.io/bbolt"
 )
 
 var db *bolt.DB
+
+type Idea struct {
+	Title 		[]string
+	Desc 		[]string
+}
 
 func InitDB() error {
 	var err error
@@ -64,8 +69,11 @@ func deleteIdea(bucket, idea string) error {
 	})
 }
 
-func IdeasPerBucket(bucket string) ([]string, error) {
+func IdeasPerBucket(bucket string) (Idea, error) {
 	var bucketOfIdeas []string
+	var bucketOfDesc []string
+	var idea Idea
+
 
 	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucket))
@@ -75,14 +83,21 @@ func IdeasPerBucket(bucket string) ([]string, error) {
 		c := b.Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
-			fmt.Printf("key=%s, value=%s\n", k, v)
+			fmt.Printf("idea=%s, desc=%s\n", k, v)
+
 			bucketOfIdeas = append(bucketOfIdeas, string(k))
+			bucketOfDesc  = append(bucketOfDesc, string(v))
 		}
 
 		return nil    
 	})	
 
-	return bucketOfIdeas, err
+	idea = Idea{
+		Title: bucketOfIdeas,
+		Desc:  bucketOfDesc,
+	}
+
+	return idea, err
 }
 
 func ShowExistingBuckets() ([]string, error) {
