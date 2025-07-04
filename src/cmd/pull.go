@@ -46,12 +46,8 @@ func PullLocal() error {
 		// },
 	}
 
-
 	checkErr(survey.AskOne(IdeaPrompt, &ideaAns))
 	
-
-
-
 	return nil
 }
 
