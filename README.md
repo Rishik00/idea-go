@@ -1,4 +1,6 @@
-![alt text](assets/image.png)
+<div align="center">
+  <img src="assets/image.png" alt="alt text" />
+</div>
 
 # idea
 A very simple idea log that can sync up with notion. Built using golang. 
