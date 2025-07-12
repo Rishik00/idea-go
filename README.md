@@ -10,3 +10,8 @@ I get a crap ton of ideas every week, and I dont have the energy (and RAM - its 
 
 It's a very basic and simple project, and I really intended for it to be as simple as possible for other poeple to use it or work with it (if you're insane enough). 
 
+## TODO: 
+1. Have sha256 up every API keys ass to protect them from "malicious people (aka me)"
+2. Refactor the whole thing considering go's best practices in mind
+3. UNIT TESTING EVERYTHING AND EVERYWHERE
+4. Testing for speed (yes, my 5 ideas per week should be uploaded fast just shut up)
