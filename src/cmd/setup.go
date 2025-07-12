@@ -1,56 +1,107 @@
+// The setup command will be done as soon as the package is done building up.
+// Users can run: idea setup to see wassup
+
 package cmd
 
 import (
 	"fmt"
+	"os"
 
 	// Github imports
-	"github.com/spf13/cobra"
-	"github.com/manifoldco/promptui"
 	survey "github.com/AlecAivazis/survey/v2"
+	"github.com/spf13/cobra"
+
+	"github.com/joho/godotenv"
 
 	// Local imports
-	"idea/db"
+	// "idea/db"
 )
 
-func SetupShit() {
-	templates := &promptui.PromptTemplates{
-		Prompt:  "{{ . }} ",
-		Valid:   "{{ . | green }} ",
-		Invalid: "{{ . | red }} ",
-		Success: "", // disables re-printing entered value
+func AddToEnv(k string , v string) (string, error) {
+	// Load existing .env to preserve other keys
+	existingEnv, _ := godotenv.Read(".env")
+	existingEnv[k] = v
+
+	err := godotenv.Write(existingEnv, ".env")
+	if err != nil {
+		return "Failure", err
 	}
 
-	// Title input
-	ApiSecretPrompt := promptui.Prompt{
-		Label:     "Enter your notion secret: ",
-		Templates: templates,
-	}
-	_, err := ApiSecretPrompt.Run()
-	checkErr(err)
-
+	return "Success", nil
 }
 
-func setupBucket() {
 
-	var title string
-	bucketName := &survey.Input{
-		Message: "Enter your bucket name:",
+func setupAPIKey() {
+	api_key := ""
+	Keyprompt := &survey.Input{
+		Message: "Paste your API key:",
 	}
 
-	// Title input
-	checkErr(survey.AskOne(bucketName, &title))
+	survey.AskOne(Keyprompt, &api_key)	
+	_, err := AddToEnv("NOTION_API_KEY", api_key)
 
-	db.AddBucket(title)
-	fmt.Print("Added the bucketname to DB:", title)
+	checkErr(err)
+}
+
+func getRelevantKeys() ([]string) {
+	existingEnv, _ := godotenv.Read(".env")
+	var keys []string
+	for k, v := range existingEnv {
+		if v == "DEFAULTPARAM" {
+			keys = append(keys, k)
+		}
+	}
+
+	return keys
+}
+
+func setupPageId(pageName string) (string) {
+	if pageName != "DEFAULTARGUMENT" {
+		_, err := AddToEnv(pageName, "DEFAULTPARAM")
+		checkErr(err)
+		return "success"
+	}
+	
+	rkeys := getRelevantKeys()
+
+	var res string
+	rKeyPrompt := &survey.Select{
+		Message: "Choose a bucket:",
+		Options: rkeys,
+	}
+	checkErr(survey.AskOne(rKeyPrompt, &res))
+
+	page_id := ""
+	PageIdPrompt := &survey.Input{
+		Message: "Paste your page ID:",
+	}
+	survey.AskOne(PageIdPrompt, &page_id)
+
+	_, err := AddToEnv(res, page_id)
+	checkErr(err)
+
+	return "Success"
+}
+
+func Setup() {
+	fmt.Println("Checking your env variables for API keys and page IDs")
+	err := godotenv.Load()
+	checkErr(err)
+
+	if os.Getenv("NOTION_API_KEY") == "" {
+		fmt.Println("API KEY not found")
+		setupAPIKey()
+	} else {
+		setupPageId("DEFAULTARGUMENT")
+	}
 }
 
 var SetupCmd = &cobra.Command{
 	Use: "setup",
 	Aliases: []string{"setup"},
-	Short: "Just a few things for notion integration, you can do this once and forget about it.",
-	Run: func (cmd *cobra.Command, args []string) {
-		fmt.Print("Just a few things for notion integration, you can do this once and forget about it.")
-		setupBucket()
+	Short: "Lets add some notion page keys and buckets. You only have to do this once or everytime you want to connect to a bucket.",
+	Run: func(cmd *cobra.Command, args []string){
+		Setup()
 	},
 }
 

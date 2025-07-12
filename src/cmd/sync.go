@@ -13,9 +13,9 @@ import (
 )
 
 
-func Sync() {
+func Sync() (string) {
 	var choices = []string{"All", "Select"}
-
+	
 	var choice string 
 	choicePrompt := &survey.Select{
 		Message: 	"Choose: ",
@@ -25,9 +25,15 @@ func Sync() {
 	
 	fmt.Print("Chosen choice: ", choice, "\n")
 	if choice == "All" {
-		synclayer.PostIdea("new Idea", "New New Idea")
+		synclayer.PostIdea("new Idea", "This is my best idea somehow huh")
 	} else {
 		keys, err := db.ShowExistingBuckets()
+
+		if len(keys) == 0 {
+			fmt.Println("Failure, est 1981")
+		}
+
+		fmt.Println("DB buckets: ", keys)
 		checkErr(err)
 
 		var bucket string
@@ -45,14 +51,16 @@ func Sync() {
 			synclayer.PostIdea(bucketIdeas.Title[i], bucketIdeas.Desc[i])
 		}
 	}
+	
+	return "Success, thanks"
 }
 
 var SyncCmd = &cobra.Command{
-	Use: "syncup",
-	Aliases: []string{"syncup"},
+	Use: "sync",
+	Aliases: []string{"sync"},
 	Short: "Sync everything with my notion page with the notion API",
 	Run: func(cmd *cobra.Command, args []string){
-		fmt.Print("Syncing everything with the cloud, ig")
+		fmt.Print("Syncing everything with the cloud")
 		Sync()
 	},
 }
