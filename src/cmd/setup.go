@@ -30,7 +30,7 @@ func AddToEnv(k string , v string) (string, error) {
 	return "Success", nil
 }
 
-
+// TODO: move this to bubbletea
 func setupAPIKey() {
 	api_key := ""
 	Keyprompt := &survey.Input{
@@ -55,6 +55,7 @@ func getRelevantKeys() ([]string) {
 	return keys
 }
 
+// TODO: move this to bubbletea
 func setupPageId(pageName string) (string) {
 	if pageName != "DEFAULTARGUMENT" {
 		_, err := AddToEnv(pageName, "DEFAULTPARAM")

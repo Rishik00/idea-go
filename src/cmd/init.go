@@ -3,11 +3,12 @@ package cmd
 import (
 	"fmt"
 
-	"idea/db"
-
 	// Github imports
-	survey "github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
+
+	// Local imports
+	"idea/db"
+	"idea/teaui"
 )
 func checkErr(err error) {
 	if err != nil {
@@ -16,16 +17,11 @@ func checkErr(err error) {
 }
 
 func createBucket() []string {
-	bucket_name := ""
-	BucketPrompt := &survey.Input{
-		Message: "Paste your bucket name:",
-	}
-	survey.AskOne(BucketPrompt, &bucket_name)
+	bucketName, err := teaui.UseTitle()
+	checkErr(err)
 
-	db.AddBucket(bucket_name)
-
-	// idk how this will go
-	setupPageId(bucket_name)
+	db.AddBucket(bucketName)
+	setupPageId(bucketName)
 
 	keys, _ := db.ShowExistingBuckets()
 	return keys
@@ -39,26 +35,11 @@ func createShit() {
 		keys = createBucket()
 	}
 
-	fmt.Println(len(keys))
+	bucket, err := teaui.UseChoice(keys)
+	checkErr(err)
 
-	var bucket string
-	bucketPrompt := &survey.Select{
-		Message: "Choose a bucket:",
-		Options: keys,
-	}
-	checkErr(survey.AskOne(bucketPrompt, &bucket))
-
-	var title string
-	titlePrompt := &survey.Input{
-		Message: "Enter your idea title:",
-	}
-	checkErr(survey.AskOne(titlePrompt, &title))
-
-	var description string
-	descPrompt := &survey.Input{
-		Message: "Enter description for your idea:",
-	}
-	checkErr(survey.AskOne(descPrompt, &description))
+	title, _ := teaui.UseTitle()
+	description := teaui.UseDescription()
 
 	fmt.Println("\nYour Idea:")
 	fmt.Println("Bucket     :", bucket)
@@ -70,15 +51,11 @@ func createShit() {
 
 func InitBucketsAndIdeas() {
 	var options = []string{"add bucket", "add idea"}
-	
-	var option string
-	bucketPrompt := &survey.Select{
-		Message: "Choose:",
-		Options: options,
-	}
-	checkErr(survey.AskOne(bucketPrompt, &option))
 
-	if option == "add bucket" {
+	selected, err  := teaui.UseChoice(options)
+	checkErr(err)
+	
+	if selected == "add bucket" {
 		createBucket()
 	} else {
 		createShit()

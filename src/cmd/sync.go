@@ -5,6 +5,7 @@ import (
 
 	// Github imports	
 	survey "github.com/AlecAivazis/survey/v2"
+	
 	"github.com/spf13/cobra"
 
 	// Local imports
@@ -33,7 +34,6 @@ func Sync() (string) {
 			fmt.Println("Failure, est 1981")
 		}
 
-		fmt.Println("DB buckets: ", keys)
 		checkErr(err)
 
 		var bucket string

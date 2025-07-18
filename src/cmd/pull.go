@@ -18,7 +18,7 @@ func PullLocal() error {
 		fmt.Println("No buckets found.")
 		return nil
 	}
-
+	
 	var bucket string
 	bucketPrompt := &survey.Select{
 		Message: "Choose a bucket:",
