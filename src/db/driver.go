@@ -3,6 +3,7 @@ package db
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	bolt "go.etcd.io/bbolt"
 )
@@ -49,6 +50,23 @@ func AddBucket(bucketname string) error {
 
 		return nil
 	}) 
+}
+
+func DeleteBucket(bucketname string) error {
+	err  := db.Update(func(tx *bolt.Tx) error {
+		err := tx.DeleteBucket([]byte(bucketname))
+
+		if err != nil {
+			return fmt.Errorf("failed to delete bucket %q: %w", bucketname, err)	
+		}
+
+		return nil
+	})	
+	if err != nil {
+		fmt.Println("Kuch toh hai delete fn mai")
+		os.Exit(-1)
+	}
+	return nil
 }
 
 func AddIdea(bucketname, idea, description string) (string, error) {
@@ -115,6 +133,9 @@ func ShowExistingBuckets() ([]string, error) {
 	return existingBuckets, err		
 }
 
+
+
+
 func DontJustShowThemAll(bucket string, num int) error {
 	// TODO: implement a filtered or formatted idea viewer
 	return nil
@@ -125,3 +146,5 @@ func CloseDB() {
 		db.Close()
 	}
 }
+
+

@@ -101,7 +101,7 @@ func Setup() {
 var SetupCmd = &cobra.Command{
 	Use: "setup",
 	Aliases: []string{"setup"},
-	Short: "Lets add some notion page keys and buckets. You only have to do this once or everytime you want to connect to a bucket.",
+	Short: "Lets add some notion page keys and workspaces. You only have to do this once or everytime you want to connect to a bucket.",
 	Run: func(cmd *cobra.Command, args []string){
 		Setup()
 	},

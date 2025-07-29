@@ -20,6 +20,12 @@ type Descriptionmodel struct {
 	err      error
 }
 
+type Initmodel struct {
+    title       textarea.Model
+    description textarea.Model
+    focusIndex  int
+}
+
 type Choicemodel struct {
 	Cursor int
 	Choice string

@@ -17,8 +17,9 @@ It's a very basic and simple project, and I really intended for it to be as simp
 4. cobra for the CLI
 
 ## TODO: 
-1. Have sha256 up every API keys ass to protect them from "malicious people (aka me)"
-2. Refactor the whole thing considering go's best practices in mind
-3. UNIT TESTING EVERYTHING AND EVERYWHERE
-4. Testing for speed (yes, my 5 ideas per week should be uploaded fast, isnt speed nice?)
-5. Integrating bubble tea and removing survey
+1. Have sha256 up every API keys ass to protect them from "malicious people (aka me)" [NotPractical]
+2. Refactor the whole thing considering go's best practices in mind [Immediate]
+3. UNIT TESTING EVERYTHING AND EVERYWHERE [Immediate]
+4. Testing for speed (yes, my 5 ideas per week should be uploaded fast, isnt speed nice?) [Later]
+5. Integrating bubble tea and removing survey [Done]
+6. Adding integrations with github [Immediate]

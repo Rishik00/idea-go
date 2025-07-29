@@ -4,27 +4,14 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	// Local imports
-	"idea/db"
+	"idea/teaui"
 )
 
-var ASCII_ART = `
-  ___ ____  _____   _    ____ _     ___ 
- |_ _|  _ \| ____| / \  / ___| |   |_ _|
-  | || | | |  _|  / _ \| |   | |    | | 
-  | || |_| | |___/ ___ \ |___| |___ | | 
- |___|____/|_____/_/   \_\____|_____|___|
-
- Why are you here? Anyway hi :)
- ----------------------------
- Use 'idea init' to create a new idea
- Use 'idea --help' to see all commands
-`
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -32,15 +19,7 @@ var rootCmd = &cobra.Command{
 	Short: "Just an idea management CLI",
 	Long:  `Just another idea management CLI with git-like commands.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(ASCII_ART)
-		keys, err := db.ShowExistingBuckets()
-		
-		fmt.Print("Your buckets: \n")
-		for idx, el := range keys {
-			fmt.Println(idx, " ",el)
-		}
-
-		checkErr(err)
+		teaui.UseHomePage()
 	},
 }
 

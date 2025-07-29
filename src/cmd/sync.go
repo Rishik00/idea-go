@@ -25,7 +25,6 @@ func Sync() (string) {
 	}
 	checkErr(survey.AskOne(choicePrompt, &choice))
 	
-	fmt.Print("Chosen choice: ", choice, "\n")
 	if choice == "All" {
 		synclayer.PostIdea("new Idea", "This is my best idea somehow huh")
 	} else {
@@ -54,9 +53,8 @@ func Sync() (string) {
 var SyncCmd = &cobra.Command{
 	Use: "sync",
 	Aliases: []string{"sync"},
-	Short: "Sync everything with my notion page with the notion API",
+	Short: "Sync everything with my notion page",
 	Run: func(cmd *cobra.Command, args []string){
-		fmt.Print("Syncing everything with the cloud")
 		Sync()
 	},
 }

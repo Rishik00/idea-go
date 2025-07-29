@@ -31,44 +31,43 @@ func createShit() {
 	keys, _ := db.ShowExistingBuckets()
 
 	if len(keys) == 0 {
-		fmt.Println("No buckets found, so lets add one")
+		fmt.Println("No workspaces found, so lets add one")
 		keys = createBucket()
 	}
 
 	bucket, err := teaui.UseChoice(keys)
 	checkErr(err)
 
-	title, _ := teaui.UseTitle()
-	description := teaui.UseDescription()
+	title, description, err := teaui.UseAltInit()
+	checkErr(err)
 
-	fmt.Println("\nYour Idea:")
-	fmt.Println("Bucket     :", bucket)
-	fmt.Println("Title      :", title)
-	fmt.Println("Description:", description)
+	if title == "" || description == "" {
+		fmt.Println("Either title or description or both are empty, please add them or else...")
+		return;
+	}
 
+	fmt.Println("\nYour skill issues Idea has been added bub")
 	db.AddIdea(bucket, title, description)
 }
 
 func InitBucketsAndIdeas() {
-	var options = []string{"add bucket", "add idea"}
+	var options = []string{"Workspace", "Title"}
 
 	selected, err  := teaui.UseChoice(options)
 	checkErr(err)
 	
-	if selected == "add bucket" {
+	if selected == "Add Workspace" {
 		createBucket()
 	} else {
 		createShit()
 	}
-
 }
 
 var InitCmd = &cobra.Command{
 	Use: "init",
 	Aliases: []string{"init"},
-	Short: "Adding an idea and a description for your ease",
+	Short: "Adding something",
 	Run: func (cmd *cobra.Command, args []string){
-		fmt.Print("Init command run hahaha")
 		InitBucketsAndIdeas()
 	},
 }
