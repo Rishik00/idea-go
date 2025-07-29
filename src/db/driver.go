@@ -10,9 +10,13 @@ import (
 var db *bolt.DB
 
 type Idea struct {
-	Title 		[]string
-	Desc 		[]string
+	Title 		string
+	Desc 		string
 }
+
+func (i Idea) MakeTitle() string   { return i.Title }
+func (i Idea) Description() string { return i.Desc }
+func (i Idea) FilterValue() string { return i.Title }
 
 func InitDB() error {
 	var err error
@@ -69,11 +73,8 @@ func deleteIdea(bucket, idea string) error {
 	})
 }
 
-func IdeasPerBucket(bucket string) (Idea, error) {
-	var bucketOfIdeas []string
-	var bucketOfDesc []string
-	var idea Idea
-
+func IdeasPerBucket(bucket string) ([]Idea, error) {
+	var bucketOfIdeas []Idea
 
 	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucket))
@@ -85,19 +86,18 @@ func IdeasPerBucket(bucket string) (Idea, error) {
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			fmt.Printf("idea=%s, desc=%s\n", k, v)
 
-			bucketOfIdeas = append(bucketOfIdeas, string(k))
-			bucketOfDesc  = append(bucketOfDesc, string(v))
+			idea := Idea{
+				Title: string(k),
+				Desc:  string(v),
+			}
+
+			bucketOfIdeas = append(bucketOfIdeas, idea)
 		}
 
-		return nil    
+		return nil
 	})	
 
-	idea = Idea{
-		Title: bucketOfIdeas,
-		Desc:  bucketOfDesc,
-	}
-
-	return idea, err
+	return bucketOfIdeas, err
 }
 
 func ShowExistingBuckets() ([]string, error) {

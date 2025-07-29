@@ -21,7 +21,6 @@ type Title struct {
 	Title []TextObject `json:"title"`
 }
 
-
 type Block struct {
 	Object    string    `json:"object"`
 	Type      string    `json:"type"`

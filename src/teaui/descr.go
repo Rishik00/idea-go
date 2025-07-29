@@ -31,6 +31,11 @@ func initialDescriptionModel() Descriptionmodel {
 	ti.Placeholder = "I want to bomb people, jk"
 	ti.Focus()
 
+	
+	// Set size
+	ti.SetWidth(200)  // any int
+	ti.SetHeight(100) // number of lines visible
+
 	return Descriptionmodel{
 		textarea: ti,
 		err:      nil,

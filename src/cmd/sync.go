@@ -10,7 +10,8 @@ import (
 
 	// Local imports
 	"idea/synclayer"
-	"idea/db"	
+	"idea/db"
+	"idea/teaui"
 )
 
 
@@ -36,19 +37,14 @@ func Sync() (string) {
 
 		checkErr(err)
 
-		var bucket string
-		bucketPrompt := &survey.Select{
-			Message: "Choose a bucket:",
-			Options: keys,
-		}
-		checkErr(survey.AskOne(bucketPrompt, &bucket))
-
+		bucket, err := teaui.UseChoice(keys)
 		fmt.Print("Bucket selected: ", bucket, "\n")
+		
 		bucketIdeas, err := db.IdeasPerBucket(bucket)
 		checkErr(err)
 
-		for i := 0; i<len(bucketIdeas.Title); i+=1 {
-			synclayer.PostIdea(bucketIdeas.Title[i], bucketIdeas.Desc[i])
+		for i := 0; i<len(bucketIdeas); i+=1 {
+			synclayer.PostIdea(bucketIdeas[i].Title, bucketIdeas[i].Desc)
 		}
 	}
 	

@@ -33,7 +33,6 @@ var rootCmd = &cobra.Command{
 	Long:  `Just another idea management CLI with git-like commands.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(ASCII_ART)
-
 		keys, err := db.ShowExistingBuckets()
 		
 		fmt.Print("Your buckets: \n")
@@ -65,5 +64,3 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-

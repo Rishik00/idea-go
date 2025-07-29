@@ -10,11 +10,11 @@ import (
 	// Github imports
 	survey "github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
-
 	"github.com/joho/godotenv"
 
 	// Local imports
 	// "idea/db"
+	// "idea/teaui"
 )
 
 func AddToEnv(k string , v string) (string, error) {
@@ -45,6 +45,7 @@ func setupAPIKey() {
 
 func getRelevantKeys() ([]string) {
 	existingEnv, _ := godotenv.Read(".env")
+
 	var keys []string
 	for k, v := range existingEnv {
 		if v == "DEFAULTPARAM" {

@@ -25,8 +25,8 @@ func initialTitleModel() TitleModel {
 	ti := textinput.New()
 	ti.Placeholder = "Pikachu"
 	ti.Focus()
-	ti.CharLimit = 156
-	ti.Width = 20
+	ti.CharLimit = 500
+	ti.Width = 100
 
 	return TitleModel{
 		input: 	   ti,
