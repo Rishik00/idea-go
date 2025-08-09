@@ -32,10 +32,37 @@ type Paragraph struct {
 }
 
 type TextObject struct {
-	Type string  `json:"type"`
-	Text Text    `json:"text"`
+	Type 			string  	`json:"type"`
+	Text 			Text    	`json:"text"`
+	PlainText 		string 		`json:"plain_text"`
+	Href        	*string 	`json:"href"`
 }
 
 type Text struct {
 	Content string `json:"content"`
 }
+
+
+// For GET request json
+type NotionListResponse struct {
+	Object  string                  `json:"object"`
+	Results []NotionResponseObject  `json:"results"`
+}
+
+type NotionResponseObject struct {
+	Object      string 		`json:"object"`
+    ID          string 		`json:"id"`
+    Type        string 		`json:"type"`
+    HasChildren bool   		`json:"has_children"`
+
+	Parent 		Parent 		`json:"parent"`
+	Paragraph 	Paragraph 	`json:"paragraph"`
+
+	ChildPage *struct {
+        Title string `json:"title"`
+    } `json:"child_page,omitempty"`
+}
+
+
+
+
